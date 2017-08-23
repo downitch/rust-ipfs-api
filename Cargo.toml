@@ -1,0 +1,10 @@
+[package]
+name = "ipfs-api"
+version = "0.1.0"
+authors = ["rmnoff <romanov.spb.alex@yandex.ru>"]
+
+[dependencies]
+curl = "*"
+json = "*"
+time = "*"
+rustc-serialize = "*"
