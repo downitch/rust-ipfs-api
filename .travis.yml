@@ -1,2 +1,4 @@
 language: rust
-script: make all
+script:
+cargo test --verbose
+
