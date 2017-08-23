@@ -1,3 +1,5 @@
 target
 Cargo.lock
 /src/*.swp
+README.md
+it_works.txt
