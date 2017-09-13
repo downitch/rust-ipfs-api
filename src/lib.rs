@@ -18,6 +18,7 @@ fn parse_bool(inp: bool) -> String {
 #[derive(Default)]
 pub struct IPFS {
     host: String,
+    port: u16,
     url: String,
     args: String,
     path: String,
@@ -30,8 +31,9 @@ impl IPFS {
         ipfs
     }
 
-    pub fn host(&mut self, inp: &str) -> &mut IPFS {
+    pub fn host(&mut self, inp: &str, port: u16) -> &mut IPFS {
         self.host = inp.to_string();
+        self.port = port;
         self
     }
 
@@ -569,7 +571,7 @@ impl IPFS {
         } else {
             format!("/{}", &self.url)
         };
-        self.host.to_string() + &link
+        self.host.to_string() + ":" + &self.port.to_string() + &link
     }
 
     fn complete_get_link(&self) -> String {
@@ -626,7 +628,7 @@ mod tests {
     #[test]
     fn cat_returns_correct_value() {
         let mut ipfs = IPFS::new();
-        ipfs.host("http://localhost:5001");
+        ipfs.host("http://localhost", 5001);
         let ipfs_response = ipfs.cat("QmaGXbCcuNazWyCmdiHsN9bdZ1GEx1GArUvbmyzkHmotDH");
         let parsed_response = Coder::decode_to_str(ipfs_response);
         assert_eq!("hello, it really works!\n", parsed_response);
@@ -635,7 +637,7 @@ mod tests {
     #[test]
     fn add_returns_correct_hash() {
         let mut ipfs = IPFS::new();
-        ipfs.host("http://localhost:5001");
+        ipfs.host("http://localhost", 5001);
         let ipfs_response = ipfs.add("./it_works.txt");
         let parsed_response = Coder::to_json2(&ipfs_response);
         let hashsumm = &parsed_response["Hash"].to_string();
@@ -645,7 +647,7 @@ mod tests {
     #[test]
     fn version_returns_correct_ver() {
         let mut ipfs = IPFS::new();
-        ipfs.host("http://localhost:5001");
+        ipfs.host("http://localhost", 5001);
         let ipfs_response = ipfs.version(false, false, false, false);
         let parsed_response = Coder::decode_to_str(ipfs_response);
         assert_eq!("{\"Version\":\"0.4.10\",\"Commit\":\"4679f80\",\"Repo\":\"5\",\"System\":\"amd64/darwin\",\"Golang\":\"go1.8.3\"}\n", parsed_response);
@@ -654,7 +656,7 @@ mod tests {
     #[test]
     fn pubsub_ls_returns_warning() {
         let mut ipfs = IPFS::new();
-        ipfs.host("http://localhost:5001");
+        ipfs.host("http://localhost", 5001);
         let ipfs_response = ipfs.pubsub_ls();
         let parsed_response = Coder::decode_to_str(ipfs_response);
         assert_eq!("{\"Message\":\"experimental pubsub feature not enabled. Run daemon with --enable-pubsub-experiment to use.\",\"Code\":0}\n", parsed_response);
