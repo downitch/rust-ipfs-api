@@ -18,7 +18,7 @@ Let's say, you want to store files in IPFS and read them right from the net:
     
     fn main() {
         let mut ipfs = IPFS::new();
-        ipfs.host("http://localhost:5001");
+        ipfs.host("http://localhost", 5001);
     
         let ipfs_response = ipfs.add("./it_works.txt");
         let parsed_response = Coder::to_json2(&ipfs_response);
