@@ -1,9 +1,7 @@
 extern crate curl;
-extern crate json;
 extern crate rustc_serialize;
 extern crate time;
-
-mod coder;
+extern crate jsonify;
 
 use std::path::Path;
 use curl::easy::{Easy, Form};
@@ -623,14 +621,14 @@ impl IPFS {
 mod tests {
 
     use super::*;
-    use coder::Coder;
+    use jsonify::Jsonify;
 
     #[test]
     fn cat_returns_correct_value() {
         let mut ipfs = IPFS::new();
         ipfs.host("http://localhost", 5001);
         let ipfs_response = ipfs.cat("QmaGXbCcuNazWyCmdiHsN9bdZ1GEx1GArUvbmyzkHmotDH");
-        let parsed_response = Coder::decode_to_str(ipfs_response);
+        let parsed_response = Jsonify::decode_to_str(ipfs_response);
         assert_eq!("hello, it really works!\n", parsed_response);
     }
 
@@ -639,7 +637,7 @@ mod tests {
         let mut ipfs = IPFS::new();
         ipfs.host("http://localhost", 5001);
         let ipfs_response = ipfs.add("./it_works.txt");
-        let parsed_response = Coder::to_json2(&ipfs_response);
+        let parsed_response = Jsonify::to_json2(&ipfs_response);
         let hashsumm = &parsed_response["Hash"].to_string();
         assert_eq!("QmaGXbCcuNazWyCmdiHsN9bdZ1GEx1GArUvbmyzkHmotDH", hashsumm);
     }
@@ -649,7 +647,7 @@ mod tests {
         let mut ipfs = IPFS::new();
         ipfs.host("http://localhost", 5001);
         let ipfs_response = ipfs.version(false, false, false, false);
-        let parsed_response = Coder::decode_to_str(ipfs_response);
+        let parsed_response = Jsonify::decode_to_str(ipfs_response);
         assert_eq!("{\"Version\":\"0.4.10\",\"Commit\":\"4679f80\",\"Repo\":\"5\",\"System\":\"amd64/darwin\",\"Golang\":\"go1.8.3\"}\n", parsed_response);
     }
 
@@ -658,7 +656,7 @@ mod tests {
         let mut ipfs = IPFS::new();
         ipfs.host("http://localhost", 5001);
         let ipfs_response = ipfs.pubsub_ls();
-        let parsed_response = Coder::decode_to_str(ipfs_response);
+        let parsed_response = Jsonify::decode_to_str(ipfs_response);
         assert_eq!("{\"Message\":\"experimental pubsub feature not enabled. Run daemon with --enable-pubsub-experiment to use.\",\"Code\":0}\n", parsed_response);
     }
 }
