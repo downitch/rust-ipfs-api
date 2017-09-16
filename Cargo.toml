@@ -1,6 +1,6 @@
 [package]
 name = "ipfs-api"
-version = "0.1.2"
+version = "0.1.4"
 authors = ["rmnoff <romanov.spb.alex@yandex.ru>"]
 
 [dependencies]
@@ -8,3 +8,4 @@ curl = "*"
 json = "*"
 time = "*"
 rustc-serialize = "*"
+jsonify = { git = "https://github.com/rmnoff/jsonify" }
